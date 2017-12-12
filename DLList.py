@@ -131,5 +131,3 @@ class DLinkedList:
 
     def getNumElms(self):
         return self.__nElms
-
-    
