@@ -42,7 +42,7 @@ class DLinkedList:
             self.__root = dllNode(data)
         else:
             newNode = dllNode(data)
-            
+
             if self.__nElms == 1:
                 self.__root.setPrev(newNode)
                 self.__root.setNext(newNode)
@@ -54,7 +54,7 @@ class DLinkedList:
                 last.setNext(newNode)
                 newNode.setPrev(last)
                 newNode.setNext(self.__root)
-                
+
         self.__nElms += 1
 
     def insertStart(self, data):
