@@ -27,16 +27,20 @@ class GraphNode:
 
 class GraphList:
     def __init__(self, V):
-        if V <= 0:
-            V = 1
+        if V < 0:
+            V = 0
         self.__V = V
         self.__A = 0
-        listAux = [GraphNode(i) for i in range(self.__V)]
-        self.__adj = np.array(listAux)
-        
+        if V > 0:
+            self.__adj = {i: GraphNode(i) for i in range(self.__V)}
+        else:
+            self.__adj = {}
+        # listAux = [GraphNode(i) for i in range(self.__V)]
+        # self.__adj = np.array(listAux)
+        # seria melhor aqui uma HashTable?
+
     def changeVerValue(self, v, value):
-        if v <= self.__V:
-            self.__adj[v].setVal(value)
+        self.__adj[v].setVal(value)
         
     def insertArc(self, v1, v2):
         if self.__adj[v1].getAdj().search(self.__adj[v2]) is None:
