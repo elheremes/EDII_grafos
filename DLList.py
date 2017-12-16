@@ -24,7 +24,9 @@ class DLinkedList:
     def __init__(self):
         self.__root = None
         self.__nElms = 0
-
+        # para o GetFirst e o GetNext
+        self.__mov = None
+        
     def __str__(self):
         outstr = "<-- "
 
@@ -115,10 +117,66 @@ class DLinkedList:
             node = self.__root
             self.__root = self.__root.getNext()
             self.__root.setPrev(node.getPrev())
-
+            node.getPrev().setNext(self.__root)
+            
         self.__nElms -= 1
         return node.getData()
 
+    def insertOrd(self, data):
+        if self.__root is None:
+            self.__root = dllNode(data)
+            self.__nElms += 1
+        else:
+            if self.__root.getData().getVal() > data.getVal():
+                self.insertStart(data)
+            elif self.__nElms == 1:
+                self.insertEnd(data)
+            else:
+                aux = self.__root
+
+                while aux.getNext().getData().getVal() <= data.getVal():
+                    aux = aux.getNext()
+                    if aux == self.__root:
+                        break
+                    
+                if aux == self.__root:
+                    self.insertEnd(data)
+                else:
+                    newNode = dllNode(data)
+                    nextAux = aux.getNext()
+                    newNode.setPrev(aux)
+                    newNode.setNext(nextAux)
+                    aux.setNext(newNode)
+                    nextAux.setPrev(newNode)
+                    self.__nElms += 1
+
+    def searchDelete(self, key):
+        if self.__root is None:
+            return None
+
+        aux = self.__root
+
+        while aux.getData().getVal() != key:
+            aux = aux.getNext()
+            if aux == self.__root:
+                break
+
+        if aux.getData().getVal() == key:
+            if aux == self.__root:
+                return self.removeStart()
+            if aux == self.__root.getPrev():
+                return self.removeEnd()
+            
+            prev = aux.getPrev()
+            next = aux.getNext()
+            prev.setNext(next)
+            next.setPrev(prev)
+
+            self.__nElms -= 1
+            return aux.getData()
+
+        return None
+            
     def search(self, key):
         node = self.__root
 
@@ -129,5 +187,27 @@ class DLinkedList:
 
         return None
 
-    def getNumElms(self):
+    def lenght(self):
         return self.__nElms
+
+    def getFirst(self):
+        if self.__root is None:
+            return None
+
+        self.__mov = self.__root
+        return self.__mov.getData()
+
+    def getNext(self):
+        if self.__mov is None:
+            return None
+
+        self.__mov = self.__mov.getNext()
+        if self.__mov == self.__root:
+            self.__mov = None
+            return None
+
+        if self.__mov is None:
+            return None
+
+        return self.__mov.getData()
+    
