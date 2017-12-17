@@ -8,13 +8,13 @@ dado3 = wd.Word("Thiago")
 lst = dll.DLinkedList()
 
 lst.insertOrd(dado2)
-lst.insertOrd(dado1)
-lst.insertOrd(dado3)
+# lst.insertOrd(dado1)
+# lst.insertOrd(dado3)
 
 print(lst)
 
-nd = lst.getFirst()
-while nd is not None:
-    print(nd)
-    nd = lst.getNext()
+# nd = lst.getFirst()
+# while nd is not None:
+#    print(nd)
+#    nd = lst.getNext()
 

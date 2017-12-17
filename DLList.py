@@ -28,6 +28,15 @@ class DLinkedList:
         self.__mov = None
         
     def __str__(self):
+        if self.__root is None:
+            return "EMPTY"
+
+        if self.__nElms == 1:
+            outstr = "NULL <-- "
+            outstr += str(self.__root.getData().getVal())
+            outstr += " --> NULL"
+            return outstr
+        
         outstr = "<-- "
 
         aux = self.__root
@@ -178,13 +187,18 @@ class DLinkedList:
         return None
             
     def search(self, key):
+        if self.__root is None:
+            return None
+        
         node = self.__root
-
+        
         while node is not None:
             if node.getData().getVal() == key:
                 return node.getData()
             node = node.getNext()
-
+            if node == self.__root:
+                break
+            
         return None
 
     def lenght(self):
@@ -211,3 +225,29 @@ class DLinkedList:
 
         return self.__mov.getData()
     
+    def getLast(self):
+        if self.__root is None:
+            return None
+
+        if self.__nElms == 1:
+            self.__mov = self.__root
+        else:
+            self.__mov = self.__root.getPrev()
+
+        return self.__mov.getData()
+
+    def getPrev(self):
+        if self.__mov is None:
+            return None
+
+        # Verificar mesmo se nao tem bugs aqui
+        self.__mov = self.__mov.getPrev()
+        if self.__mov == self.__root.getPrev():
+            self.__mov = None
+            return None
+
+        if self.__mov is None:
+            return None
+
+        return self.__mov.getData()
+        

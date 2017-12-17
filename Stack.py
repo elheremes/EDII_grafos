@@ -12,6 +12,6 @@ class Stack:
         return self.__elms.removeEnd()
 
     def size(self):
-        return self.__elms.getNumElms()
+        return self.__elms.lenght()
 
     
