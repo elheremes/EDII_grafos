@@ -48,6 +48,9 @@ class DLinkedList:
 
         return outstr
 
+    def getNelms(self):
+        return self.__nElms
+
     def insertEnd(self, data):
         if self.__root is None:
             self.__root = dllNode(data)

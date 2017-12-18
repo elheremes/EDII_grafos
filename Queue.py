@@ -1,6 +1,5 @@
 import DLList as dll
 
-
 class Queue:
     def __init__(self):
         self.__elms = dll.DLinkedList()
