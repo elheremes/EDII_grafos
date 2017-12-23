@@ -92,7 +92,7 @@ class GraphMatrix:
             tmp = self.__vertexs
             line = tmp.index(v)
             for i in range(self.__V):
-                if self.__adj[line, i] == 1 :#and tmp[i].getColor() != 2:
+                if self.__adj[line, i] == 1 and tmp[i].getColor() == 0:
                     return tmp[i]
             
             return None
@@ -104,27 +104,35 @@ class GraphMatrix:
         start.setColor(1)
 
         if start.getKey().getVal() == key:
+            start.setTime(time)
             caminho += start.getKey().getVal()
             return caminho
 
+        start.setTime(time)
         caminho += start.getKey().getVal()
         p = st.Stack()
         p.push(start)
         while p.size() > 0:
+            input()
+            print(p)
+            time = time + 1
             elm = p.top()
             aux = self.adjacente(elm)
 
             if aux != None :
-                if aux.getColor() == 0 :
+                if aux.getColor() == 0:
                     aux.setColor(1)
-                    p.push(aux)
+                    aux.setTime(time)
                     caminho += " -> " + aux.getKey().getVal()
-                    if aux.getKey().getVal() == key :
+                    if aux.getKey().getVal() == key:
                         return caminho
-                else:
+                    p.push(aux)
+                else :
                     aux.setColor(2)
-                    p.pop()   
-        
+                    p.pop()
+            else :
+                p.pop()
+
         return "Not Found!" 
 
 if __name__ == "__main__":
@@ -148,5 +156,5 @@ if __name__ == "__main__":
     g.createAresta(C, D)
     g.createAresta(C, A)
 
-    print(g.DFS(A, "D"))
+    print(g.DFS(A, "E"))
     #g.showMatriz()
