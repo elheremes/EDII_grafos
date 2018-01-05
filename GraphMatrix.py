@@ -5,9 +5,9 @@ import Stack as st
 
 class Vetex:
     def __init__(self, key):
-        self.__time = 0#pegar o tempo
-        self.__color = 0#setar a cor
-        self.__key = key 
+        self.__time = 0 #pegar o tempo
+        self.__color = 0 #setar a cor
+        self.__key = key
 
     def setTime(self, time):
         self.__time = time
@@ -78,7 +78,7 @@ class GraphMatrix:
         for i in range(0, self.__V):
             for j in range(0, self.__V):
                 matOut += "[" + str(self.__adj[i, j]) + "]" + " "
-            matOut += "\n" 
+            matOut += "\n"
         print(matOut)
 
     def numberArestas(self):
@@ -94,7 +94,7 @@ class GraphMatrix:
             for i in range(self.__V):
                 if self.__adj[line, i] == 1 and tmp[i].getColor() == 0:
                     return tmp[i]
-            
+
             return None
 
     # 0 Branco, 1 Cinza, 2 Preto
@@ -113,8 +113,8 @@ class GraphMatrix:
         p = st.Stack()
         p.push(start)
         while p.size() > 0:
-            input()
-            print(p)
+            #input()
+            #print(p)
             time = time + 1
             elm = p.top()
             aux = self.adjacente(elm)
@@ -123,6 +123,7 @@ class GraphMatrix:
                 if aux.getColor() == 0:
                     aux.setColor(1)
                     aux.setTime(time)
+                    #print(aux.getVal() + " time: "+ str(aux.getTime()))
                     caminho += " -> " + aux.getKey().getVal()
                     if aux.getKey().getVal() == key:
                         return caminho
@@ -133,11 +134,11 @@ class GraphMatrix:
             else :
                 p.pop()
 
-        return "Not Found!" 
+        return "Not Found!"
 
 if __name__ == "__main__":
     g = GraphMatrix(5)
-    
+
     A = Vetex(wd.Word("A"))
     B = Vetex(wd.Word("B"))
     C = Vetex(wd.Word("C"))
@@ -156,5 +157,5 @@ if __name__ == "__main__":
     g.createAresta(C, D)
     g.createAresta(C, A)
 
-    print(g.DFS(A, "E"))
-    #g.showMatriz()
+    print(g.DFS(A, "A"))
+    g.showMatriz()
