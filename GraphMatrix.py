@@ -57,6 +57,13 @@ class GraphMatrix:
             self.__adj[posV1, posV2] = 1
             self.__A += 1
 
+    def createAresta(self, v1, v2, peso):
+        posV1 = self.index(v1)
+        posV2 = self.index(v2)
+        if self.__adj[posV1, posV2] == 0:
+            self.__adj[posV1, posV2] = peso
+            self.__A += 1
+
     def deleteAresta(self, v1, v2):
         posV1 = self.index(v1)
         posV2 = self.index(v2)
@@ -92,7 +99,7 @@ class GraphMatrix:
             tmp = self.__vertexs
             line = tmp.index(v)
             for i in range(self.__V):
-                if self.__adj[line, i] == 1 and tmp[i].getColor() == 0:
+                if self.__adj[line, i] != 0 and tmp[i].getColor() == 0:
                     return tmp[i]
 
             return None
@@ -136,6 +143,18 @@ class GraphMatrix:
 
         return "Not Found!"
 
+    def BFS(self, start, key):
+        pass
+    
+    def algPrim(self, start):
+        orig = self.index(start)
+        noFather = -1
+        vertexFather = [] #vet que define o pai de um vertice
+        for i in range(self.__V):
+            vertexFather[i] = noFather # todos os vertices são definidos sem pais
+        vertexFather[orig] = orig # vertice inicial recebe ele mesmo como pai 
+
+
 if __name__ == "__main__":
     g = GraphMatrix(5)
 
@@ -151,11 +170,11 @@ if __name__ == "__main__":
     g.setVertexs(D)
     g.setVertexs(E)
 
-    g.createAresta(A, B)
-    g.createAresta(A, E)
-    g.createAresta(B, C)
-    g.createAresta(C, D)
-    g.createAresta(C, A)
+    g.createAresta(A, B, 5)
+    g.createAresta(A, E, 3)
+    g.createAresta(B, C, 9)
+    g.createAresta(C, D, 4)
+    g.createAresta(C, A, 9)
 
-    print(g.DFS(A, "A"))
+    #print(g.DFS(A, "E"))
     g.showMatriz()
