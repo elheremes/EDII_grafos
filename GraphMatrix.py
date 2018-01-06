@@ -164,35 +164,42 @@ class GraphMatrix:
         return numGrau
 
     def algPrim(self, start):
-        origem = self.index(start)
-        noFather = -1
-        vertexFather = [] #vet que define o pai de um vertice; também é a MST
-        #destino #vertice de destino com a menpor aresta
-        for i in range(self.__V):
-            vertexFather[i] = noFather # todos os vertices são definidos sem pais
-        vertexFather[origem] = origem # vertice inicial recebe ele mesmo como pai 
+        inf = 9999
+        solved = True
+        markedCell = np.zeros((self.__V, self.__V))
+        markedVertex = np.zeros(self.__V)
+        markedVertex[0] = 1
 
-        while True :
-            print(vertexFather)
+        while solved :
+            print(markedCell)
+            print(markedVertex)
             input()
-            primeiro = 1 # pq  ???????????
+            menorPeso = inf
+            count = 0
+            expectedR = -1
+            expectedL = -1
+
             for i in range(self.__V):
-                if vertexFather[i] != noFather :
-                    for j in range(self.grau(i)) :
-                        if vertexFather[self.__adj[i][j]] == noFather :
-                            if primeiro :
-                                menorPeso = self.__adj[i][j]
-                                origem = i 
-                                destino = self.__adj[i][j]
-                                primeiro = 0
-                            else :
-                                if menorPeso > self.__adj[i][j] :
-                                    menorPeso = self.__adj[i][j]
-                                    origem = 1
-                                    destino = self.__adj[i][j]
-            if primeiro == 1 :
-                break
-            vertexFather[destino] = origem
+                if markedVertex[i] == 1 :
+                    for j in range(self.__V):
+                        if self.__adj[i][j] != 0 and self.__adj[i][j] < menorPeso and markedCell[i][j] == 0:
+                            menorPeso = self.__adj[i][j]
+                            expectedR = i
+                            expectedL = j
+            if expectedR != -1 and expectedL != -1  :
+                markedCell[expectedR][expectedL] = 1
+                markedCell[expectedL][expectedR] = 1
+                markedVertex[expectedR] = 1
+                markedVertex[expectedL] = 1
+
+            for i in range(self.__V) :
+                if markedVertex[i] :
+                    count = count + 1
+            if count == self.__V :
+                solved = False
+
+    def algKruskal(self, start):
+        pass
 
 if __name__ == "__main__":
     g = GraphMatrix(6)
