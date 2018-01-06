@@ -146,35 +146,81 @@ class GraphMatrix:
     def BFS(self, start, key):
         pass
     
+    def grau(self, index):
+        numIndex = self.index(index)
+        numGrau = 0
+        for i in range(self.__V):
+            if self.__adj[numIndex][i] != 0 :
+                numGrau = numGrau + 1
+        
+        return numGrau
+
+    def grau(self, numIndex):
+        numGrau = 0
+        for i in range(self.__V):
+            if self.__adj[numIndex][i] != 0 :
+                numGrau = numGrau + 1
+        
+        return numGrau
+
     def algPrim(self, start):
-        orig = self.index(start)
+        origem = self.index(start)
         noFather = -1
-        vertexFather = [] #vet que define o pai de um vertice
+        vertexFather = [] #vet que define o pai de um vertice; também é a MST
+        #destino #vertice de destino com a menpor aresta
         for i in range(self.__V):
             vertexFather[i] = noFather # todos os vertices são definidos sem pais
-        vertexFather[orig] = orig # vertice inicial recebe ele mesmo como pai 
+        vertexFather[origem] = origem # vertice inicial recebe ele mesmo como pai 
 
+        while True :
+            print(vertexFather)
+            input()
+            primeiro = 1 # pq  ???????????
+            for i in range(self.__V):
+                if vertexFather[i] != noFather :
+                    for j in range(self.grau(i)) :
+                        if vertexFather[self.__adj[i][j]] == noFather :
+                            if primeiro :
+                                menorPeso = self.__adj[i][j]
+                                origem = i 
+                                destino = self.__adj[i][j]
+                                primeiro = 0
+                            else :
+                                if menorPeso > self.__adj[i][j] :
+                                    menorPeso = self.__adj[i][j]
+                                    origem = 1
+                                    destino = self.__adj[i][j]
+            if primeiro == 1 :
+                break
+            vertexFather[destino] = origem
 
 if __name__ == "__main__":
-    g = GraphMatrix(5)
+    g = GraphMatrix(6)
 
     A = Vetex(wd.Word("A"))
     B = Vetex(wd.Word("B"))
     C = Vetex(wd.Word("C"))
     D = Vetex(wd.Word("D"))
     E = Vetex(wd.Word("E"))
+    F = Vetex(wd.Word("F"))
 
     g.setVertexs(A)
     g.setVertexs(B)
     g.setVertexs(C)
     g.setVertexs(D)
     g.setVertexs(E)
+    g.setVertexs(F)
 
-    g.createAresta(A, B, 5)
-    g.createAresta(A, E, 3)
-    g.createAresta(B, C, 9)
-    g.createAresta(C, D, 4)
-    g.createAresta(C, A, 9)
+    g.createAresta(A, B, 6)
+    g.createAresta(A, C, 1)
+    g.createAresta(A, D, 5)
+    g.createAresta(B, C, 2)
+    g.createAresta(B, E, 5)
+    g.createAresta(C, D, 2)
+    g.createAresta(C, E, 6)
+    g.createAresta(C, F, 4)
+    g.createAresta(D, F, 4)
+    g.createAresta(E, F, 3)
 
-    #print(g.DFS(A, "E"))
     g.showMatriz()
+    g.algPrim(A)
