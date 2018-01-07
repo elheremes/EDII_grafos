@@ -171,9 +171,9 @@ class GraphMatrix:
         markedVertex[0] = 1
 
         while solved :
-            print(markedCell)
-            print(markedVertex)
-            input()
+            #print(markedCell)
+            #print(markedVertex)
+            #input()
             menorPeso = inf
             count = 0
             expectedR = -1
@@ -197,6 +197,13 @@ class GraphMatrix:
                     count = count + 1
             if count == self.__V :
                 solved = False
+
+        for i in range(self.__V) :
+            for j in range(self.__V) :
+                if markedCell[i][j] == 1:
+                    print(" A " + str(i) + " -- " + str(j) + " =>  peso : " + str(self.__adj[i][j]))
+
+        print(markedCell)
 
     def algKruskal(self, start):
         pass
