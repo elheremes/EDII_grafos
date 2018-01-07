@@ -13,5 +13,8 @@ class Queue:
     def dequeue(self):
         return self.__elms.removeStart()
 
+    def top(self):
+    	return self.__elms.getLast()
+
     def size(self):
         return self.__elms.lenght()

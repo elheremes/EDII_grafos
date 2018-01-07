@@ -2,6 +2,7 @@ import numpy as np
 import Word as wd
 import DLList as dll
 import Stack as st
+import Queue as qe
 
 class Vetex:
     def __init__(self, key):
@@ -105,6 +106,44 @@ class GraphMatrix:
             return None
 
     # 0 Branco, 1 Cinza, 2 Preto
+    def BFS(self, start, key):
+        caminho = ""
+        time = 0
+        start.setColor(1)
+
+        if start.getKey().getVal() == key:
+            start.setTime(time)
+            caminho += start.getKey().getVal()
+            return caminho
+
+        start.setTime(time)
+        caminho += start.getKey().getVal()
+        f = qe.Queue()
+        f.enqueue(start)
+        while f.size() > 0:
+            input()
+            print(f)
+            time = time + 1
+            elm = f.top()
+            aux = self.adjacente(elm)
+
+            if aux != None :
+                if aux.getColor() == 0:
+                    aux.setColor(1)
+                    aux.setTime(time)
+                    #print(aux.getVal() + " time: "+ str(aux.getTime()))
+                    caminho += " -> " + aux.getKey().getVal()
+                    if aux.getKey().getVal() == key:
+                        return caminho
+                    f.enqueue(aux)
+                else :
+                    aux.setColor(2)
+                    f.denqueue()
+            else :
+                f.dequeue()
+
+        return "Not Found!"
+
     def DFS(self, start, key):
         caminho = ""
         time = 0
@@ -120,8 +159,8 @@ class GraphMatrix:
         p = st.Stack()
         p.push(start)
         while p.size() > 0:
-            #input()
-            #print(p)
+            input()
+            print(p)
             time = time + 1
             elm = p.top()
             aux = self.adjacente(elm)
@@ -142,9 +181,6 @@ class GraphMatrix:
                 p.pop()
 
         return "Not Found!"
-
-    def BFS(self, start, key):
-        pass
     
     def grau(self, index):
         numIndex = self.index(index)
@@ -164,16 +200,13 @@ class GraphMatrix:
         return numGrau
 
     def algPrim(self, start):
-        inf = 9999
+        inf     = 9999
         solved = True
         markedCell = np.zeros((self.__V, self.__V))
         markedVertex = np.zeros(self.__V)
         markedVertex[0] = 1
 
         while solved :
-            #print(markedCell)
-            #print(markedVertex)
-            #input()
             menorPeso = inf
             count = 0
             expectedR = -1
@@ -186,6 +219,7 @@ class GraphMatrix:
                             menorPeso = self.__adj[i][j]
                             expectedR = i
                             expectedL = j
+
             if expectedR != -1 and expectedL != -1  :
                 markedCell[expectedR][expectedL] = 1
                 markedCell[expectedL][expectedR] = 1
@@ -197,13 +231,6 @@ class GraphMatrix:
                     count = count + 1
             if count == self.__V :
                 solved = False
-
-        for i in range(self.__V) :
-            for j in range(self.__V) :
-                if markedCell[i][j] == 1:
-                    print(" A " + str(i) + " -- " + str(j) + " =>  peso : " + str(self.__adj[i][j]))
-
-        print(markedCell)
 
     def algKruskal(self, start):
         pass
@@ -237,4 +264,5 @@ if __name__ == "__main__":
     g.createAresta(E, F, 3)
 
     g.showMatriz()
-    g.algPrim(A)
+    #g.algPrim(A)
+    g.BFS(A, "E")
