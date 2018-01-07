@@ -58,7 +58,7 @@ class GraphMatrix:
             self.__adj[posV1, posV2] = 1
             self.__A += 1
 
-    def createAresta(self, v1, v2, peso):
+    def createArestaPonderada(self, v1, v2, peso):
         posV1 = self.index(v1)
         posV2 = self.index(v2)
         if self.__adj[posV1, posV2] == 0:
@@ -124,21 +124,22 @@ class GraphMatrix:
             input()
             print(f)
             time = time + 1
-            elm = f.top()
+            elm = f.first()
             aux = self.adjacente(elm)
+            #print(aux.getVal())
 
             if aux != None :
                 if aux.getColor() == 0:
                     aux.setColor(1)
                     aux.setTime(time)
-                    #print(aux.getVal() + " time: "+ str(aux.getTime()))
                     caminho += " -> " + aux.getKey().getVal()
                     if aux.getKey().getVal() == key:
+                        print(caminho)
                         return caminho
                     f.enqueue(aux)
                 else :
                     aux.setColor(2)
-                    f.denqueue()
+                    f.dequeue()
             else :
                 f.dequeue()
 
@@ -159,8 +160,8 @@ class GraphMatrix:
         p = st.Stack()
         p.push(start)
         while p.size() > 0:
-            input()
-            print(p)
+            #input()
+            #print(p)
             time = time + 1
             elm = p.top()
             aux = self.adjacente(elm)
@@ -169,7 +170,6 @@ class GraphMatrix:
                 if aux.getColor() == 0:
                     aux.setColor(1)
                     aux.setTime(time)
-                    #print(aux.getVal() + " time: "+ str(aux.getTime()))
                     caminho += " -> " + aux.getKey().getVal()
                     if aux.getKey().getVal() == key:
                         return caminho
@@ -236,33 +236,37 @@ class GraphMatrix:
         pass
 
 if __name__ == "__main__":
-    g = GraphMatrix(6)
+    g = GraphMatrix(8)
 
-    A = Vetex(wd.Word("A"))
-    B = Vetex(wd.Word("B"))
-    C = Vetex(wd.Word("C"))
-    D = Vetex(wd.Word("D"))
-    E = Vetex(wd.Word("E"))
-    F = Vetex(wd.Word("F"))
+    R = Vetex(wd.Word("R"))
+    S = Vetex(wd.Word("S"))
+    T = Vetex(wd.Word("T"))
+    U = Vetex(wd.Word("U"))
+    V = Vetex(wd.Word("V"))
+    W = Vetex(wd.Word("W"))
+    X = Vetex(wd.Word("X"))
+    Y = Vetex(wd.Word("Y"))
 
-    g.setVertexs(A)
-    g.setVertexs(B)
-    g.setVertexs(C)
-    g.setVertexs(D)
-    g.setVertexs(E)
-    g.setVertexs(F)
+    g.setVertexs(R)
+    g.setVertexs(S)
+    g.setVertexs(T)
+    g.setVertexs(U)
+    g.setVertexs(V)
+    g.setVertexs(W)
+    g.setVertexs(X)
+    g.setVertexs(Y)
 
-    g.createAresta(A, B, 6)
-    g.createAresta(A, C, 1)
-    g.createAresta(A, D, 5)
-    g.createAresta(B, C, 2)
-    g.createAresta(B, E, 5)
-    g.createAresta(C, D, 2)
-    g.createAresta(C, E, 6)
-    g.createAresta(C, F, 4)
-    g.createAresta(D, F, 4)
-    g.createAresta(E, F, 3)
+    g.createAresta(V, R)
+    g.createAresta(R, S)
+    g.createAresta(S, W)
+    g.createAresta(W, T)
+    g.createAresta(W, X)
+    g.createAresta(T, X)
+    g.createAresta(T, U)
+    g.createAresta(U, X)
+    g.createAresta(U, Y)
+    g.createAresta(X, Y)
 
     g.showMatriz()
     #g.algPrim(A)
-    g.BFS(A, "E")
+    g.BFS(V, "Y")
