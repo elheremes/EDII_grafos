@@ -234,10 +234,10 @@ class GraphMatrix:
 
     ########################################################################################################
     def buscaKruskal(self, subset, vertex):
-        if (subset[vertex] == -1 ):
+        if subset[vertex] == -1 :
             return vertex
-        else:
-            return buscaKruskal(self, subset, vertex)
+        else :
+            return self.buscaKruskal(subset, subset[vertex])
            
     def union(self, subset, v1, v2):
         v1set = self.buscaKruskal(subset, v1)
@@ -250,8 +250,10 @@ class GraphMatrix:
             subset[i] = -1
 
         for i in range(self.__V):
-            for j in range(self.__V):
+            for j in range(i, self.__V):
                 if (self.__adj[i][j] != 0):
+                    print(subset)
+                    input()
                     v1 = self.buscaKruskal(subset, i)
                     v2 = self.buscaKruskal(subset, j)
 
@@ -260,7 +262,7 @@ class GraphMatrix:
                     else:
                         self.union(subset, v1, v2)
         return False
-        
+
     def algKruskal(self, start):
         pass
 
@@ -296,6 +298,8 @@ if __name__ == "__main__":
     g.createAresta(U, Y)
     g.createAresta(X, Y)
 
-    g.showMatriz()
+    #g.showMatriz()
     #g.algPrim(A)
-    g.BFS(V, "Y")
+    #g.BFS(V, "Y")
+
+    print(g.hasCicle())
