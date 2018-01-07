@@ -2,7 +2,7 @@
 import DLList as dll
 import Queue as qu
 import Word as wd
-
+import Stack as stk
 
 class GraphNode:
     def __init__(self, key, data=None):
@@ -111,6 +111,82 @@ class GraphList:
                 ptr = self.__adj[u.getVal()].getAdj().getNext()
             color[u] = 2
 
+    def DFS(self, s):
+        color = {}
+        dist = {}
+        pred = {}
+        
+        for key, item in self.__adj.items():
+            color[item] = 0
+            dist[item] = -1
+            pred[item] = None
+
+        if s in self.__adj:
+            s = self.__adj[s]
+        else:
+            return None
+
+        color[s] = 1
+        dist[s] = 0
+        pred[s] = None  # Necessário?
+        Q = stk.Stack()
+        Q.push(s)
+        while Q.size() != 0:
+            print(Q)
+            u = Q.pop()
+            ptr = self.__adj[u.getVal()].getAdj().getFirst()
+            while ptr is not None:
+                if color[ptr] == 0:
+                    color[ptr] = 1
+                    dist[ptr] = dist[u] + 1
+                    pred[ptr] = u
+                    Q.push(ptr)
+                ptr = self.__adj[u.getVal()].getAdj().getNext()
+            color[u] = 2
+
+    def DFSwTime(self, s):
+        color = {}
+        dist = {}
+        pred = {}
+        d = {}
+        f = {}
+        time = 0
+        
+        for key, item in self.__adj.items():
+            color[item] = 0
+            dist[item] = -1
+            pred[item] = None
+
+        if s in self.__adj:
+            s = self.__adj[s]
+        else:
+            return None
+
+        for key in color:
+            if color[key] == 0:
+                time = self.__DFSwTimeVisit(s, time, color, dist, pred, d, f)
+
+        return time
+
+    def __DFSwTimeVisit(self, v, time, color, dist, pred, d, f):
+        color[v] = 1
+        time = time + 1
+        d[v] = time
+        ptr = self.__adj[v.getVal()].getAdj().getFirst()
+        while ptr is not None:
+            if color[ptr] == 0:
+                time = self.__DFSwTimeVisit(ptr, time, color, dist, pred, d, f)
+            ptr = self.__adj[v.getVal()].getAdj().getNext()
+
+        color[v] = 2
+        time = time + 1
+        f[v] = time
+
+        print(d[v], f[v])
+        
+        return time
+        
+
 
 if __name__ == "__main__":
     g = GraphList()
@@ -144,7 +220,7 @@ if __name__ == "__main__":
     g.insertArc("x", "u")
     g.insertArc("u", "y")
 
-    g.BFS("s")
+    g.DFSwTime("s")
     
     g.show()
 
