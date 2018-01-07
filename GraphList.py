@@ -99,6 +99,7 @@ class GraphList:
         Q = qu.Queue()
         Q.enqueue(s)
         while Q.size() != 0:
+            input()
             print(Q)
             u = Q.dequeue()
             ptr = self.__adj[u.getVal()].getAdj().getFirst()
@@ -220,8 +221,8 @@ if __name__ == "__main__":
     g.insertArc("x", "u")
     g.insertArc("u", "y")
 
-    g.DFSwTime("s")
+    #g.DFSwTime("s")
     
-    g.show()
+    #g.show()
 
-    
+    g.BFS("s")     

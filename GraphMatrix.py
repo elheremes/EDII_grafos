@@ -232,6 +232,35 @@ class GraphMatrix:
             if count == self.__V :
                 solved = False
 
+    ########################################################################################################
+    def buscaKruskal(self, subset, vertex):
+        if (subset[vertex] == -1 ):
+            return vertex
+        else:
+            return buscaKruskal(self, subset, vertex)
+           
+    def union(self, subset, v1, v2):
+        v1set = self.buscaKruskal(subset, v1)
+        v2set = self.buscaKruskal(subset, v2)
+        subset[v1set] = v2set
+ 
+    def hasCicle(self):
+        subset = np.zeros(self.__V)
+        for i in range(self.__V):
+            subset[i] = -1
+
+        for i in range(self.__V):
+            for j in range(self.__V):
+                if (self.__adj[i][j] != 0):
+                    v1 = self.buscaKruskal(subset, i)
+                    v2 = self.buscaKruskal(subset, j)
+
+                    if v1 == v2 :
+                        return True
+                    else:
+                        self.union(subset, v1, v2)
+        return False
+        
     def algKruskal(self, start):
         pass
 
