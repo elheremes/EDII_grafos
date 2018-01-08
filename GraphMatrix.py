@@ -134,36 +134,24 @@ class GraphMatrix:
 
     ########################################################################################################
     # 0 Branco, 1 Cinza, 2 Preto
-    def BFS(self, start, key):
+    def BFS(self, start):
         caminho = ""
         time = 0
         start.setColor(1)
-
-        if start.getKey().getVal() == key:
-            start.setTime(time)
-            caminho += start.getKey().getVal()
-            return caminho
-
         start.setTime(time)
         caminho += start.getKey().getVal()
         f = qe.Queue()
         f.enqueue(start)
         while f.size() > 0:
-            input()
-            print(f)
             time = time + 1
             elm = f.first()
             aux = self.adjacente(elm)
-            #print(aux.getVal())
 
             if aux != None :
                 if aux.getColor() == 0:
                     aux.setColor(1)
                     aux.setTime(time)
                     caminho += " -> " + aux.getKey().getVal()
-                    if aux.getKey().getVal() == key:
-                        print(caminho)
-                        return caminho
                     f.enqueue(aux)
                 else :
                     aux.setColor(2)
@@ -171,25 +159,17 @@ class GraphMatrix:
             else :
                 f.dequeue()
 
-        return "Not Found!"
+        return caminho
 
-    def DFS(self, start, key):
+    def DFS(self, start):
         caminho = ""
         time = 0
         start.setColor(1)
-
-        if start.getKey().getVal() == key:
-            start.setTime(time)
-            caminho += start.getKey().getVal()
-            return caminho
-
         start.setTime(time)
         caminho += start.getKey().getVal()
         p = st.Stack()
         p.push(start)
         while p.size() > 0:
-            #input()
-            #print(p)
             time = time + 1
             elm = p.top()
             aux = self.adjacente(elm)
@@ -199,8 +179,6 @@ class GraphMatrix:
                     aux.setColor(1)
                     aux.setTime(time)
                     caminho += " -> " + aux.getKey().getVal()
-                    if aux.getKey().getVal() == key:
-                        return caminho
                     p.push(aux)
                 else :
                     aux.setColor(2)
@@ -208,8 +186,9 @@ class GraphMatrix:
             else :
                 p.pop()
 
-        return "Not Found!"
-    
+        return caminho
+
+    ########################################################################################################    
     def grau(self, index):
         numIndex = self.index(index)
         numGrau = 0
@@ -219,7 +198,6 @@ class GraphMatrix:
         
         return numGrau
 
-    ########################################################################################################
     def algPrim(self, start):
         inf     = 9999
         solved = True
@@ -252,6 +230,11 @@ class GraphMatrix:
                     count = count + 1
             if count == self.__V :
                 solved = False
+        
+        for i in range(self.__V):
+            for j in range(self.__V):
+                if markedCell[i][j] != 0:
+                    print("Edge: " + str(i) + " -- " + str(j) + " // Weight: " + str(self.__adj[i][j]));
 
     ########################################################################################################
     def buscaKruskal(self, subset, vertex):
@@ -375,10 +358,10 @@ if __name__ == "__main__":
     g.createArestaPonderada(C, D, 5)
 
     #g.showMatriz()
-    #g.algPrim(A)
-    #g.BFS(V, "Y")
+    g.algPrim(A)
+    #print(str(g.BFS(A)))
+    #print(str(g.DFS(A)))
     #print(str(g.hasCicle()))
     #g.algKruskal()
-
-    g.dijkstra(A, E)
+    #g.dijkstra(A, E)
     
