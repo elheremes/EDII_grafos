@@ -358,10 +358,10 @@ if __name__ == "__main__":
     g.createArestaPonderada(C, D, 5)
 
     #g.showMatriz()
-    g.algPrim(A)
+    # g.algPrim(A)
     #print(str(g.BFS(A)))
     #print(str(g.DFS(A)))
     #print(str(g.hasCicle()))
-    #g.algKruskal()
+    g.algKruskal()
     #g.dijkstra(A, E)
     

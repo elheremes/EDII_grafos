@@ -4,7 +4,30 @@ import Queue as qu
 import Word as wd
 import Stack as stk
 
-class GraphNode:
+class ArcNode:
+    def __init__(self, data, w=1):
+        self.__data = data
+        self.__weight = w  # PESO
+
+    def getVal(self):
+        return self.__data.getVal()
+
+    def getData(self):
+        return self.__data.getData()
+
+    def setVal(self, val):
+        self.__data.setVal(val)
+
+    def getAdj(self):
+        return self.__data.getAdj()
+
+    def getWeight(self):
+        return self.__weight
+
+    def VertexForm(self):
+        return self.__data
+    
+class VertexNode:
     def __init__(self, key, data=None):
         self.__key = key
         if data is None:
@@ -33,10 +56,10 @@ class GraphList:
         self.__V = V
         self.__A = 0
         if V > 0:
-            self.__adj = {i: GraphNode(i) for i in range(self.__V)}
+            self.__adj = {i: VertexNode(i) for i in range(self.__V)}
         else:
             self.__adj = {}
-        # listAux = [GraphNode(i) for i in range(self.__V)]
+        # listAux = [VertexNode(i) for i in range(self.__V)]
         # self.__adj = np.array(listAux)
         # seria melhor aqui uma HashTable?
 
@@ -44,13 +67,13 @@ class GraphList:
         if v in self.__adj:
             self.__adj[v].setVal(value)
         else:
-            self.__adj[v] = GraphNode(v, value)
+            self.__adj[v] = VertexNode(v, value)
             self.__V += 1
             
-    def insertArc(self, v1, v2):
+    def insertArc(self, v1, v2, w=1):
         if self.__adj[v1].getAdj().search(self.__adj[v2]) is None:
-            self.__adj[v1].getAdj().insertOrd(self.__adj[v2])
-            self.__adj[v2].getAdj().insertOrd(self.__adj[v1])
+            self.__adj[v1].getAdj().insertOrd(ArcNode(self.__adj[v2], w))
+            self.__adj[v2].getAdj().insertOrd(ArcNode(self.__adj[v1], w))
             self.__A += 1
             # += 2? Não?
 
@@ -66,7 +89,7 @@ class GraphList:
             strOut += "Vértice: " + str(key) + " | Adjacências:"
             aux = self.__adj[key].getAdj().getFirst()
             while aux is not None:
-                strOut += " " + str(aux.getVal())
+                strOut += " " + str(aux.getVal()) + " :-: " + str(aux.getWeight()) + " |"
                 aux = self.__adj[key].getAdj().getNext()
             print(strOut)
             
@@ -99,10 +122,11 @@ class GraphList:
         Q = qu.Queue()
         Q.enqueue(s)
         while Q.size() != 0:
-            input()
             print(Q)
             u = Q.dequeue()
             ptr = self.__adj[u.getVal()].getAdj().getFirst()
+            if ptr is not None:
+                ptr = ptr.VertexForm()
             while ptr is not None:
                 if color[ptr] == 0:
                     color[ptr] = 1
@@ -110,6 +134,8 @@ class GraphList:
                     pred[ptr] = u
                     Q.enqueue(ptr)
                 ptr = self.__adj[u.getVal()].getAdj().getNext()
+                if ptr is not None:
+                    ptr = ptr.VertexForm()
             color[u] = 2
 
     def DFS(self, s):
@@ -136,6 +162,8 @@ class GraphList:
             print(Q)
             u = Q.pop()
             ptr = self.__adj[u.getVal()].getAdj().getFirst()
+            if ptr is not None:
+                ptr = ptr.VertexForm()
             while ptr is not None:
                 if color[ptr] == 0:
                     color[ptr] = 1
@@ -143,6 +171,8 @@ class GraphList:
                     pred[ptr] = u
                     Q.push(ptr)
                 ptr = self.__adj[u.getVal()].getAdj().getNext()
+                if ptr is not None:
+                    ptr = ptr.VertexForm()
             color[u] = 2
 
     def DFSwTime(self, s):
@@ -174,11 +204,15 @@ class GraphList:
         time = time + 1
         d[v] = time
         ptr = self.__adj[v.getVal()].getAdj().getFirst()
+        if ptr is not None:
+            ptr = ptr.VertexForm()
         while ptr is not None:
             if color[ptr] == 0:
                 time = self.__DFSwTimeVisit(ptr, time, color, dist, pred, d, f)
             ptr = self.__adj[v.getVal()].getAdj().getNext()
-
+            if ptr is not None:
+                ptr = ptr.VertexForm()
+                
         color[v] = 2
         time = time + 1
         f[v] = time
@@ -210,19 +244,21 @@ if __name__ == "__main__":
     g.insertVer("x", dado7)
     g.insertVer("y", dado8)
     
-    g.insertArc("s", "w")
-    g.insertArc("s", "r")
+    g.insertArc("s", "w", 5)
+    g.insertArc("s", "r", 2)
     g.insertArc("r", "v")
     g.insertArc("w", "t")
     g.insertArc("w", "x")
-    g.insertArc("t", "u")
+    g.insertArc("t", "u", 3)
     g.insertArc("t", "x")
     g.insertArc("x", "y")
     g.insertArc("x", "u")
     g.insertArc("u", "y")
 
-    #g.DFSwTime("s")
+    g.DFS("s")
     
-    #g.show()
-
+    g.DFSwTime("s")
+    
     g.BFS("s")     
+
+    g.show()
