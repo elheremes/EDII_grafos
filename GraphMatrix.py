@@ -327,12 +327,16 @@ class GraphMatrix:
         for i in range(self.__V):
             dist[i] = inf
             visited[i] = False
-
+        
         dist[self.index(start)] = 0
         f.enqueue(start)
 
         while f.size() > 0 :
             aux = f.dequeue()
+            print("dist: " + str(dist))
+            print("visited: " + str(visited))
+            print("fila: " + str(f))
+            input()
             if visited[self.index(aux)] == False :
                 visited[self.index(aux)] = True
 
@@ -341,10 +345,11 @@ class GraphMatrix:
                         vetAdj = i
                         custoAresta = self.__adj[self.index(aux)][i]
 
-                        if dist[vetAdj] > (dist[self.index(aux)]) + custoAresta) : 
-                            dist[vetAdj] = dist[self.index(aux)]) + custoAresta
+                        if dist[vetAdj] > (dist[self.index(aux)] + custoAresta) : 
+                            dist[vetAdj] = dist[self.index(aux)] + custoAresta
                             f.enqueue(self.__vertexs[vetAdj])
 
+        print("custo: " + str(dist[self.index(end)]))
         return dist[self.index(end)]
     
 if __name__ == "__main__":
@@ -362,15 +367,18 @@ if __name__ == "__main__":
     g.setVertexs(D)
     g.setVertexs(E)
 
-    g.createArestaPonderada(A, B, 7)
-    g.createArestaPonderada(A, C, 3)
-    g.createArestaPonderada(B, C, 5)
-    g.createArestaPonderada(C, D, 9)
-    g.createArestaPonderada(D, E, 2)
+    g.createArestaPonderada(A, B, 5)
+    g.createArestaPonderada(A, C, 6)
+    g.createArestaPonderada(A, D, 7)
+    g.createArestaPonderada(B, E, 4)
+    g.createArestaPonderada(D, E, 1)
+    g.createArestaPonderada(C, D, 5)
 
     #g.showMatriz()
     #g.algPrim(A)
     #g.BFS(V, "Y")
     #print(str(g.hasCicle()))
-    g.algKruskal()
+    #g.algKruskal()
+
+    g.dijkstra(A, E)
     
