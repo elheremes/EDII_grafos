@@ -4,6 +4,29 @@ import DLList as dll
 import Stack as st
 import Queue as qe
 
+class Aresta:
+    def __init__(self, v1, v2, peso):
+        self.__v1 = v1 
+        self.__v2 = v2 
+        self.__peso = peso
+
+    def __str__(self):
+        outstr = "v1: "
+        outstr += str(self.__v1) + " / v2: "
+        outstr += str(self.__v2) + " / peso: "
+        outstr += str(self.__peso)
+
+        return outstr
+    
+    def getPeso(self):
+        return self.__peso
+
+    def getV1(self):
+        return self.__v1
+
+    def getV2(self):
+        return self.__v2
+
 class Vetex:
     def __init__(self, key):
         self.__time = 0 #pegar o tempo
@@ -39,6 +62,10 @@ class GraphMatrix:
         self.__A = 0
         self.__adj = np.zeros((self.__V, self.__V))
         self.__vertexs = []
+        self.__arestas = []
+
+    def getVetArestas(self):
+        return self.__arestas
 
     def getVertexs(self):
         return self.__vertexs
@@ -238,7 +265,7 @@ class GraphMatrix:
         if subset[int(vertex)] == -1 :
             return vertex
         else :
-            return self.buscaKruskal(subset, subset[vertex])
+            return self.buscaKruskal(subset, subset[int(vertex)])
            
     def union(self, subset, v1, v2):
         v1set = self.buscaKruskal(subset, v1)
@@ -246,8 +273,8 @@ class GraphMatrix:
         subset[int(v1set)] = v2set
  
     def hasCicle(self):
-        subset = np.zeros(self.__V + 10)
-        for i in range(self.__V + 10):
+        subset = np.zeros(self.__V)
+        for i in range(self.__V):
             subset[i] = -1
 
         for i in range(self.__V):
@@ -262,8 +289,40 @@ class GraphMatrix:
                         self.union(subset, v1, v2)
         return False
 
-    def algKruskal(self, start):
-        pass
+    def sortAresta(self):
+        for i in range(len(self.__arestas)):
+            for j in range(i, len(self.__arestas)):
+                if i != j:
+                    if self.__arestas[i].getPeso() > self.__arestas[j].getPeso() :
+                        self.__arestas[i], self.__arestas[j] = self.__arestas[j], self.__arestas[i]  
+
+    def generateArestaForMST(self):
+        for i in range(self.__V):
+            for j in range(self.__V):
+                if self.__adj[i][j] != 0 :
+                    self.__arestas.append(Aresta(i, j, self.__adj[i][j]))
+    
+    def algKruskal(self):
+        subset = np.zeros(self.__V)
+        mst = []
+        self.generateArestaForMST()
+        self.sortAresta()
+
+        for i in range(self.__V):
+            subset[i] = -1
+
+        for i in range(len(self.__arestas)):
+            v1 = self.buscaKruskal(subset, self.__arestas[i].getV1())
+            v2 = self.buscaKruskal(subset, self.__arestas[i].getV2())
+            
+            if v1 != v2 :
+                mst.append(self.__arestas[i])
+                self.union(subset, v1, v2)
+
+        for i in range(len(mst)):
+            print(" v " + str(mst[i].getV1()) + " -- " + str(mst[i].getV2()) + " peso: " + str(mst[i].getPeso()))
+
+        return mst
 
 if __name__ == "__main__":
     g = GraphMatrix(3)
@@ -276,12 +335,13 @@ if __name__ == "__main__":
     g.setVertexs(B)
     g.setVertexs(C)
 
-    g.createAresta(A, B)
-    g.createAresta(A, C)
-    g.createAresta(B, C)
+    g.createArestaPonderada(A, B, 7)
+    g.createArestaPonderada(A, C, 3)
+    g.createArestaPonderada(B, C, 4)
 
     #g.showMatriz()
     #g.algPrim(A)
     #g.BFS(V, "Y")
-
     #print(str(g.hasCicle()))
+    g.algKruskal()
+    
