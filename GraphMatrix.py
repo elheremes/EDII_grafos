@@ -132,6 +132,7 @@ class GraphMatrix:
 
             return None
 
+    ########################################################################################################
     # 0 Branco, 1 Cinza, 2 Preto
     def BFS(self, start, key):
         caminho = ""
@@ -211,14 +212,6 @@ class GraphMatrix:
     
     def grau(self, index):
         numIndex = self.index(index)
-        numGrau = 0
-        for i in range(self.__V):
-            if self.__adj[numIndex][i] != 0 :
-                numGrau = numGrau + 1
-        
-        return numGrau
-
-    def grau(self, numIndex):
         numGrau = 0
         for i in range(self.__V):
             if self.__adj[numIndex][i] != 0 :
@@ -324,20 +317,56 @@ class GraphMatrix:
 
         return mst
 
+    ########################################################################################################
+    def dijkstra(self, start, end):
+        dist = np.zeros(self.__V)
+        visited = np.zeros(self.__V)
+        f = qe.Queue()
+        inf = 9999  
+
+        for i in range(self.__V):
+            dist[i] = inf
+            visited[i] = False
+
+        dist[self.index(start)] = 0
+        f.enqueue(start)
+
+        while f.size() > 0 :
+            aux = f.dequeue()
+            if visited[self.index(aux)] == False :
+                visited[self.index(aux)] = True
+
+                for i in range(self.__V):
+                    if self.__adj[self.index(aux)][i] != 0 :
+                        vetAdj = i
+                        custoAresta = self.__adj[self.index(aux)][i]
+
+                        if dist[vetAdj] > (dist[self.index(aux)]) + custoAresta) : 
+                            dist[vetAdj] = dist[self.index(aux)]) + custoAresta
+                            f.enqueue(self.__vertexs[vetAdj])
+
+        return dist[self.index(end)]
+    
 if __name__ == "__main__":
-    g = GraphMatrix(3)
+    g = GraphMatrix(5)
 
     A = Vetex(wd.Word("A"))
     B = Vetex(wd.Word("B"))
     C = Vetex(wd.Word("C"))
+    D = Vetex(wd.Word("D"))
+    E = Vetex(wd.Word("E"))
     
     g.setVertexs(A)
     g.setVertexs(B)
     g.setVertexs(C)
+    g.setVertexs(D)
+    g.setVertexs(E)
 
     g.createArestaPonderada(A, B, 7)
     g.createArestaPonderada(A, C, 3)
-    g.createArestaPonderada(B, C, 4)
+    g.createArestaPonderada(B, C, 5)
+    g.createArestaPonderada(C, D, 9)
+    g.createArestaPonderada(D, E, 2)
 
     #g.showMatriz()
     #g.algPrim(A)
