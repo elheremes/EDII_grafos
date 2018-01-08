@@ -199,6 +199,7 @@ class GraphMatrix:
         
         return numGrau
 
+    ########################################################################################################
     def algPrim(self, start):
         inf     = 9999
         solved = True
@@ -234,7 +235,7 @@ class GraphMatrix:
 
     ########################################################################################################
     def buscaKruskal(self, subset, vertex):
-        if subset[vertex] == -1 :
+        if subset[int(vertex)] == -1 :
             return vertex
         else :
             return self.buscaKruskal(subset, subset[vertex])
@@ -242,18 +243,16 @@ class GraphMatrix:
     def union(self, subset, v1, v2):
         v1set = self.buscaKruskal(subset, v1)
         v2set = self.buscaKruskal(subset, v2)
-        subset[v1set] = v2set
+        subset[int(v1set)] = v2set
  
     def hasCicle(self):
-        subset = np.zeros(self.__V)
-        for i in range(self.__V):
+        subset = np.zeros(self.__V + 10)
+        for i in range(self.__V + 10):
             subset[i] = -1
 
         for i in range(self.__V):
             for j in range(i, self.__V):
-                if (self.__adj[i][j] != 0):
-                    print(subset)
-                    input()
+                if self.__adj[i][j] != 0 :
                     v1 = self.buscaKruskal(subset, i)
                     v2 = self.buscaKruskal(subset, j)
 
@@ -267,39 +266,22 @@ class GraphMatrix:
         pass
 
 if __name__ == "__main__":
-    g = GraphMatrix(8)
+    g = GraphMatrix(3)
 
-    R = Vetex(wd.Word("R"))
-    S = Vetex(wd.Word("S"))
-    T = Vetex(wd.Word("T"))
-    U = Vetex(wd.Word("U"))
-    V = Vetex(wd.Word("V"))
-    W = Vetex(wd.Word("W"))
-    X = Vetex(wd.Word("X"))
-    Y = Vetex(wd.Word("Y"))
+    A = Vetex(wd.Word("A"))
+    B = Vetex(wd.Word("B"))
+    C = Vetex(wd.Word("C"))
+    
+    g.setVertexs(A)
+    g.setVertexs(B)
+    g.setVertexs(C)
 
-    g.setVertexs(R)
-    g.setVertexs(S)
-    g.setVertexs(T)
-    g.setVertexs(U)
-    g.setVertexs(V)
-    g.setVertexs(W)
-    g.setVertexs(X)
-    g.setVertexs(Y)
-
-    g.createAresta(V, R)
-    g.createAresta(R, S)
-    g.createAresta(S, W)
-    g.createAresta(W, T)
-    g.createAresta(W, X)
-    g.createAresta(T, X)
-    g.createAresta(T, U)
-    g.createAresta(U, X)
-    g.createAresta(U, Y)
-    g.createAresta(X, Y)
+    g.createAresta(A, B)
+    g.createAresta(A, C)
+    g.createAresta(B, C)
 
     #g.showMatriz()
     #g.algPrim(A)
     #g.BFS(V, "Y")
 
-    print(g.hasCicle())
+    #print(str(g.hasCicle()))
