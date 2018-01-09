@@ -1,14 +1,19 @@
-# import numpy as np
+import numpy as np
 import DLList as dll
 import Queue as qu
 import Word as wd
 import Stack as stk
 
 class ArcNode:
-    def __init__(self, data, w=1):
+    def __init__(self, data, source, oriented=False, w=1):
         self.__data = data
         self.__weight = w  # PESO
+        self.__oriented = oriented
+        self.__source = source
 
+    def __str__(self):
+        return str(self.__weight)
+        
     def getVal(self):
         return self.__data.getVal()
 
@@ -24,8 +29,14 @@ class ArcNode:
     def getWeight(self):
         return self.__weight
 
+    def getSource(self):
+        return self.__source
+        
     def VertexForm(self):
         return self.__data
+
+    def Oriented(self):
+        return self.__oriented
     
 class VertexNode:
     def __init__(self, key, data=None):
@@ -63,6 +74,12 @@ class GraphList:
         # self.__adj = np.array(listAux)
         # seria melhor aqui uma HashTable?
 
+        # Verificar logo aqui e colocar atributos dizendo se vai ser
+        # ponderado ou não, e se vai ser direcionado ou não
+
+    def degree(self, v): # GRAU
+        return self.__adj[v].getAdj().getNelms()
+        
     def insertVer(self, v, value):
         if v in self.__adj:
             self.__adj[v].setVal(value)
@@ -72,24 +89,38 @@ class GraphList:
             
     def insertArc(self, v1, v2, w=1):
         if self.__adj[v1].getAdj().search(self.__adj[v2]) is None:
-            self.__adj[v1].getAdj().insertOrd(ArcNode(self.__adj[v2], w))
-            self.__adj[v2].getAdj().insertOrd(ArcNode(self.__adj[v1], w))
+            self.__adj[v1].getAdj().insertOrd(ArcNode(self.__adj[v2], v1, False, w))
+            self.__adj[v2].getAdj().insertOrd(ArcNode(self.__adj[v1], v2, False, w))
             self.__A += 1
             # += 2? Não?
-
+            
     def deleteArc(self, v1, v2):
         if self.__adj[v1].getAdj().searchDelete(
                 self.__adj[v2].getVal())is not None:
             self.__adj[v2].getAdj().searchDelete(self.__adj[v1].getVal())
             self.__A -= 1
 
+    def insertOrientedArc(self, v1, v2, w=1):
+        if self.__adj[v1].getAdj().search(self.__adj[v2]) is None:
+            self.__adj[v1].getAdj().insertOrd(ArcNode(self.__adj[v2], v1, True, w))
+            self.__A += 1
+
+    def deleteOrientedArc(self, v1, v2):
+        if self.__adj[v1].getAdj().searchDelete(
+                self.__adj[v2].getVal())is not None:
+            self.__A -= 1
+            # return True # ?
+            
     def show(self):
         for key in self.__adj:
             strOut = ""
             strOut += "Vértice: " + str(key) + " | Adjacências:"
             aux = self.__adj[key].getAdj().getFirst()
             while aux is not None:
-                strOut += " " + str(aux.getVal()) + " :-: " + str(aux.getWeight()) + " |"
+                if aux.Oriented() is True:
+                    strOut += " " + str(aux.getVal()) + " --> " + str(aux.getWeight()) + " |"
+                else:
+                    strOut += " " + str(aux.getVal()) + " :-: " + str(aux.getWeight()) + " |"
                 aux = self.__adj[key].getAdj().getNext()
             print(strOut)
             
@@ -220,9 +251,79 @@ class GraphList:
         print(d[v], f[v])
         
         return time
-        
 
+    def buscaKruskal(self, subset, vertex):
+        if subset[vertex] == -1:
+            return vertex
+        else:
+            return self.buscaKruskal(subset, subset[vertex])
+    
+    def union(self, subset, v1, v2):
+        v1set = self.buscaKruskal(subset, v1)
+        v2set = self.buscaKruskal(subset, v2)
+        subset[v1set] = v2set
+    
+    def hasCircle(self):
+        subset = {}
+        for item in self.__adj:
+            subset[self.__adj[item].getVal()] = -1
 
+        for item in self.__adj:
+            ptr = self.__adj[item].getAdj().getFirst()
+            while ptr is not None:
+                v1 = self.buscaKruskal(subset, self.__adj[item].getVal())
+                v2 = self.buscaKruskal(subset, ptr.getVal())
+
+                if v1 == v2:
+                    return True
+                else:
+                    self.union(subset, v1, v2)
+                
+                ptr = self.__adj[item].getAdj().getNext()
+
+        return False
+
+    def sortAresta(self, arestas):
+        for i in range(len(arestas)):
+            for j in range(i, len(arestas)):
+                if i != j:
+                    if arestas[i].getWeight() > arestas[j].getWeight():
+                        arestas[i], arestas[j] = arestas[j], arestas[i]
+        return arestas
+    
+    def generateArestaForMST(self):
+        arestas = []
+        for item in self.__adj:
+            ptr = self.__adj[item].getAdj().getFirst()
+            while ptr is not None:
+                arestas.append(ptr)
+                ptr = self.__adj[item].getAdj().getNext()
+
+        return arestas
+
+    def Kruskal(self):
+        subset = {}
+        mst = []
+        arestas = self.generateArestaForMST()
+        arestas = self.sortAresta(arestas)
+
+        for item in self.__adj:
+            subset[self.__adj[item].getVal()] = -1
+
+        for i in range(len(arestas)):
+            v1 = self.buscaKruskal(subset, arestas[i].getSource())
+            v2 = self.buscaKruskal(subset, arestas[i].getVal())
+
+            if v1 != v2:
+                mst.append(arestas[i])
+                self.union(subset, v1, v2)
+
+        for i in range(len(mst)):
+             print(" v " + str(mst[i].getSource()) + " -- " + str(mst[i].getVal()) + " peso: " + str(mst[i].getWeight()))
+
+        return mst
+            
+    
 if __name__ == "__main__":
     g = GraphList()
 
@@ -246,15 +347,24 @@ if __name__ == "__main__":
     
     g.insertArc("s", "w", 5)
     g.insertArc("s", "r", 2)
-    g.insertArc("r", "v")
-    g.insertArc("w", "t")
-    g.insertArc("w", "x")
+    g.insertArc("r", "v", 3)
+    g.insertArc("w", "t", 4)
+    g.insertArc("w", "x", 2)
     g.insertArc("t", "u", 3)
-    g.insertArc("t", "x")
-    g.insertArc("x", "y")
-    g.insertArc("x", "u")
-    g.insertArc("u", "y")
+    g.insertArc("t", "x", 8)
+    g.insertArc("x", "y", 5)
+    g.insertArc("x", "u", 11)
+    g.insertArc("u", "y", 2)
 
+    # g.insertOrientedArc("s", "w", 5)
+    # g.insertOrientedArc("w", "t", 2)
+    # g.insertOrientedArc("t", "v")
+    # g.insertOrientedArc("w", "x")
+    # g.insertOrientedArc("t", "u", 3)
+    # g.insertOrientedArc("t", "x")
+    # g.insertOrientedArc("x", "y")
+    # g.insertOrientedArc("x", "u")
+    # g.insertOrientedArc("u", "y")
     g.DFS("s")
     
     g.DFSwTime("s")
@@ -262,3 +372,23 @@ if __name__ == "__main__":
     g.BFS("s")     
 
     g.show()
+
+    g.Kruskal()
+    
+    # arestas = g.generateArestaForMST()
+
+    # for i in range(len(arestas)):
+    #     print(arestas[i])
+
+    # arestas = g.sortAresta(arestas)
+
+    # print("\n")
+
+    # for i in range(len(arestas)):
+    #     print(arestas[i])
+
+    
+    
+    # print(g.degree("s"))
+
+    # print(g.hasCircle())
