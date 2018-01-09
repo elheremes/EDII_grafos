@@ -1,20 +1,21 @@
-import DLList as dll
-import Word as wd
+import sys
+import aux
+# import time
+# import resource
 
-dado1 = wd.Word("Pedro")
-dado2 = wd.Word("Abacate")
-dado3 = wd.Word("Thiago")
+def main(argv):
+    if len(argv) < 2:
+        print("Por favor, escolha o tipo de grafo que deseja usar. [GraphList = glist] ou [GraphMatrix = gmatrix]")
+    elif len(argv) == 2:
+        print("Por favor, escolha o arquivo de texto que será usado para carregar o grafo.")
+    else:
+        results = aux.identifyGraphType(argv[2])
 
-lst = dll.DLinkedList()
+        g = aux.loadGraphList(argv[2], results)
 
-lst.insertOrd(dado2)
-# lst.insertOrd(dado1)
-# lst.insertOrd(dado3)
-
-print(lst)
-
-# nd = lst.getFirst()
-# while nd is not None:
-#    print(nd)
-#    nd = lst.getNext()
-
+        g.show()
+        
+        
+            
+if __name__ == "__main__":
+    main(sys.argv)

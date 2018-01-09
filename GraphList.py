@@ -61,7 +61,7 @@ class VertexNode:
 
 
 class GraphList:
-    def __init__(self, V=0):
+    def __init__(self, weighted=False, V=0):
         if V < 0:
             V = 0
         self.__V = V
@@ -74,6 +74,7 @@ class GraphList:
         # self.__adj = np.array(listAux)
         # seria melhor aqui uma HashTable?
 
+        self.__weighted = weighted
         # Verificar logo aqui e colocar atributos dizendo se vai ser
         # ponderado ou não, e se vai ser direcionado ou não
 
@@ -118,9 +119,15 @@ class GraphList:
             aux = self.__adj[key].getAdj().getFirst()
             while aux is not None:
                 if aux.Oriented() is True:
-                    strOut += " " + str(aux.getVal()) + " --> " + str(aux.getWeight()) + " |"
+                    strOut += " > " + str(aux.getVal())
                 else:
-                    strOut += " " + str(aux.getVal()) + " :-: " + str(aux.getWeight()) + " |"
+                    strOut += " " + str(aux.getVal())
+
+                if self.__weighted is True:
+                    strOut += " :-: " + str(aux.getWeight()) + " |"
+                else:
+                    strOut += " |"
+                    
                 aux = self.__adj[key].getAdj().getNext()
             print(strOut)
             
@@ -325,7 +332,7 @@ class GraphList:
             
     
 if __name__ == "__main__":
-    g = GraphList()
+    g = GraphList(True)
 
     dado1 = wd.Word("r")
     dado2 = wd.Word("s")
