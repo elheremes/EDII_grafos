@@ -67,12 +67,25 @@ class GraphMatrix:
     def getVetArestas(self):
         return self.__arestas
 
+    def getNVertex(self, n):
+        return self.__vertexs[n]
+    
+    def getVertex(self, vetex):
+        for v in self.__vertexs:
+            if vetex.getKey().getVal() == v.getKey().getVal():
+                return v
+        return None
+    
     def getVertexs(self):
         return self.__vertexs
 
     def setVertexs(self, Vetex):
+        for v in self.__vertexs:
+            if v.getVal() == Vetex.getVal(): # MODIFIQUEI AQUI
+                return True
         self.__vertexs.append(Vetex)
-
+        return False
+        
     def index(self, key):
         for i in range(len(self.__vertexs)):
             if self.__vertexs[i] == key :
@@ -104,7 +117,7 @@ class GraphMatrix:
             strOut = ""
             strOut += "Vértice: " + str(i) + " | Adjacências:"
             for j in range(self.__V):
-                if self.__adj[i, j] == 1:
+                if self.__adj[i, j] != 0:
                     strOut += " " + str(j)
             print(strOut)
 
@@ -358,10 +371,10 @@ if __name__ == "__main__":
     g.createArestaPonderada(C, D, 5)
 
     #g.showMatriz()
-    # g.algPrim(A)
-    #print(str(g.BFS(A)))
-    #print(str(g.DFS(A)))
-    #print(str(g.hasCicle()))
+    g.algPrim(A)
+    print(str(g.BFS(A)))
+    print(str(g.DFS(A)))
+    print(str(g.hasCicle()))
     g.algKruskal()
-    #g.dijkstra(A, E)
+    g.dijkstra(A, E)
     

@@ -80,7 +80,7 @@ class GraphList:
 
     def degree(self, v): # GRAU
         return self.__adj[v].getAdj().getNelms()
-        
+    
     def insertVer(self, v, value):
         if v in self.__adj:
             self.__adj[v].setVal(value)

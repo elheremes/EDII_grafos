@@ -55,6 +55,25 @@ def insertOrientation(g, v1, v2, orientation, p = 0):
             g.insertOrientedArc(v1, v2, p)
             g.insertOrientedArc(v2, v1, p)
 
+def insertOrientationM(g, v1, v2, orientation, p = 0):
+    if orientation == ">":
+        if p == 0:
+            g.createAresta(v1, v2)
+        else:
+            g.createArestaPonderada(v1, v2, p)
+    elif orientation == "<":
+        if p == 0:
+            g.createAresta(v2, v1)
+        else:
+            g.createArestaPonderada(v2, v1, p)
+    elif orientation == "<>":
+        if p == 0:
+            g.createAresta(v1, v2)
+            g.createAresta(v2, v1)
+        else:
+            g.createArestaPonderada(v1, v2, p)
+            g.createArestaPonderada(v2, v1, p)
+            
 def loadGraphList(filename, gType):
     f = open(filename, "r")
 
@@ -145,12 +164,12 @@ def loadGraphMatrix(filename, gType):
 
     line = f.readline()
 
-    if isNumber(line[0]) is False:
+    if isNumber(line) is False:
         print("Quantidade de Vértices Invalida, abortando.")
         sys.exit()
-
-    graph = gm.GraphMatrix(int(line[0]))
-
+        
+    graph = gm.GraphMatrix(int(line))
+    
     if gType["pondered"] is True:
         if gType["oriented"] is True:
             line = f.readline()
@@ -158,18 +177,24 @@ def loadGraphMatrix(filename, gType):
                 turn = 1
                 for word in line.split():
                     if turn == 1:
-                        v1 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v1 = dado
                     if turn == 3:
-                        v2 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v2 = dado
                     if turn == 4:
                         wei = float(word)
                     if turn != 2 and turn != 4:
-                        dado = wd.Word(word)
-                        graph.setVertex(word, dado)
+                        status = graph.setVertexs(dado)
+                        if status is True:
+                            if turn == 1:
+                                v1 = graph.getVertex(dado)
+                            else:
+                                v2 = graph.getVertex(dado)
                     elif turn == 2:
                         orientation = word
                     turn += 1
-                insertOrientation(graph, v1, v2, orientation, wei)
+                insertOrientationM(graph, v1, v2, orientation, wei)
                 line = f.readline()
         else:
             line = f.readline()
@@ -177,16 +202,24 @@ def loadGraphMatrix(filename, gType):
                 turn = 1
                 for word in line.split():
                     if turn == 1:
-                        v1 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v1 = dado
                     if turn == 2:
-                        v2 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v2 = dado
                     if turn == 3:
                         wei = float(word)
                     if turn != 3:
-                        dado = wd.Word(word)
-                        graph.insertVer(word, dado)
+                        status = graph.setVertexs(dado)
+                        if status is True:
+                            if turn == 1:
+                                v1 = graph.getVertex(dado)
+                            else:
+                                v2 = graph.getVertex(dado)
+                            
                     turn += 1
-                graph.insertArc(v1, v2, wei)
+                graph.createArestaPonderada(v1, v2, wei)
+                graph.createArestaPonderada(v2, v1, wei)
                 line = f.readline()
     else:
         if gType["oriented"] is True:
@@ -196,16 +229,24 @@ def loadGraphMatrix(filename, gType):
                 turn = 1
                 for word in line.split():
                     if turn == 1:
-                        v1 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v1 = dado
                     if turn == 3:
-                        v2 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v2 = dado
                     if turn != 2:
-                        dado = wd.Word(word)
-                        graph.insertVer(word, dado)
+                        status = graph.setVertexs(dado)
+                        if status is True:
+                            if turn == 1:
+                                v1 = graph.getVertex(dado)
+                            else:
+                                v2 = graph.getVertex(dado)
+                        
                     else:
                         orientation = word
+                                
                     turn += 1
-                insertOrientation(graph, v1, v2, orientation)
+                insertOrientationM(graph, v1, v2, orientation)
                 line = f.readline()
         else:
             line = f.readline()
@@ -214,13 +255,20 @@ def loadGraphMatrix(filename, gType):
                 turn = 1
                 for word in line.split():
                     if turn == 1:
-                        v1 = word
+                        dado = gm.Vetex(wd.Word(word))
+                        v1 = dado
                     elif turn == 2:
-                        v2 = word
-                    dado = wd.Word(word)
-                    graph.insertVer(word, dado)
+                        dado = gm.Vetex(wd.Word(word))
+                        v2 = dado
+                    status = graph.setVertexs(dado)
+                    if status is True:
+                        if turn == 1:
+                            v1 = graph.getVertex(dado)
+                        else:
+                            v2 = graph.getVertex(dado)
                     turn += 1
-                graph.insertArc(v1, v2)
+                graph.createAresta(v1, v2)
+                graph.createAresta(v2, v1)
                 line = f.readline()
 
     return graph
